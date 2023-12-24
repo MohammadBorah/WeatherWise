@@ -135,7 +135,6 @@ const moon = document.querySelector(".moon");
 const stars = document.querySelectorAll(".stars");
 const humidity = document.querySelector(".humidity") ; 
 
-/////////////////////////
 //handle dayTime for default dark or light mode
 isDayTime ? (isLightMode = true) : (isLightMode = false);
 if (!isLightMode) handleDarkMode();
@@ -324,4 +323,127 @@ function handleDarkMode() {
   if (searchInput.value != "") renderWeatherAsync(searchInput.value);
 }
 darkMode.addEventListener("click", handleDarkMode);
+//weekely data 
+
+
 });
+  ///weeekely data 
+  async function getWeatherForecast() {
+    const city = document.querySelector(".search_input").value;
+    const apiKey = 'be5ab507efe19fa17051973e945f0555';
+    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`;
+  
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+  
+      const forecastContainer = document.getElementById('forecast');
+      const weatherIconContainer = document.getElementById('weather-icon');
+  
+      if (!forecastContainer || !weatherIconContainer) {
+        console.error('Containers not found');
+        return;
+      }
+  
+      forecastContainer.innerHTML = '';
+      weatherIconContainer.innerHTML = '';
+  
+      // Iterate through the next 4 days
+      for (let i = 0; i < 4; i++) {
+        const item = data.list[i];
+        if (!item) continue;
+  
+        const date = new Date(item.dt * 1000);
+  
+        const card = document.createElement('div');
+        card.classList.add('card', 'day', 'card-week');
+  
+        const iconContainer = document.createElement('div');
+        iconContainer.classList.add('icon-container');
+  
+        const weatherIcon = document.createElement('img');
+        const weatherIconCode = item.weather[0].icon;
+        const weatherIconUrl = `https://openweathermap.org/img/w/${weatherIconCode}.png`;
+        weatherIcon.style.width = '100px'; // Adjust the width as needed
+        weatherIcon.style.height = '100px';
+        weatherIcon.src = weatherIconUrl;
+        weatherIcon.alt = 'Weather Icon';
+  
+        iconContainer.appendChild(weatherIcon);
+  
+        const infoContainer = document.createElement('div');
+        infoContainer.classList.add('info-container');
+        infoContainer.innerHTML = `
+          <strong>${date.toDateString()}</strong>
+          <p>Temperature: <span class="temperature">${item.main.temp}</span> &#8451;</p>
+          <p>Weather: <span class="weather-description">${item.weather[0].description}</span></p>`;
+  
+        card.appendChild(iconContainer);
+        card.appendChild(infoContainer);
+  
+        forecastContainer.appendChild(card);
+      }
+    } catch (error) {
+      console.error('Error fetching weather data:', error);
+    }
+  }
+  async function getHourlyWeatherForecast() {
+    const city = document.querySelector(".search_input").value;
+    const apiKey = 'be5ab507efe19fa17051973e945f0555';
+    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`;
+  
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+  
+      const forecastContainer = document.getElementById('forecast');
+      const weatherIconContainer = document.getElementById('weather-icon');
+  
+      if (!forecastContainer || !weatherIconContainer) {
+        console.error('Containers not found');
+        return;
+      }
+  
+      forecastContainer.innerHTML = '';
+      weatherIconContainer.innerHTML = '';
+  
+      // Iterate through the next 24 hours
+      for (let i = 0; i < 24; i++) {
+        const item = data.list[i];
+        if (!item) continue;
+  
+        const date = new Date(item.dt * 1000);
+  
+        const card = document.createElement('div');
+        card.classList.add('card', 'hourly');
+  
+        const iconContainer = document.createElement('div');
+        iconContainer.classList.add('icon-container');
+  
+        const weatherIcon = document.createElement('img');
+        const weatherIconCode = item.weather[0].icon;
+        const weatherIconUrl = `https://openweathermap.org/img/w/${weatherIconCode}.png`;
+        weatherIcon.style.width = '100px'; // Adjust the width as needed
+        weatherIcon.style.height = '100px';
+        weatherIcon.src = weatherIconUrl;
+        weatherIcon.alt = 'Weather Icon';
+  
+        iconContainer.appendChild(weatherIcon);
+  
+        const infoContainer = document.createElement('div');
+        infoContainer.classList.add('info-container');
+        infoContainer.innerHTML = `
+          <strong>${date.getHours()}:00</strong>
+          <p>Temperature: <span class="temperature">${item.main.temp}</span> &#8451;</p>
+          <p>Weather: <span class="weather-description">${item.weather[0].description}</span></p>`;
+  
+        card.appendChild(iconContainer);
+        card.appendChild(infoContainer);
+  
+        forecastContainer.appendChild(card);
+      }
+    } catch (error) {
+      console.error('Error fetching weather data:', error);
+    }
+  }
+  

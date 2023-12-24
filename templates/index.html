@@ -50,7 +50,8 @@
       <div class="dark_mode_btn"><i class="fas fa-sun"></i></div>
       <div class="lang_btn">EN</div>
       <div class="weather_search">
-        <input type="text" class="search_input" id="cityInput" autocomplete="off" placeholder="Search your location..." />
+        <input type="text" class="search_input" id="cityInput" autocomplete="off"
+          placeholder="Search your location..." />
         <button class="search_btn"><i class="fas fa-search"></i></button>
       </div>
       <div class="weather_body">
@@ -71,8 +72,8 @@
             <h5 class="card-title">Weather Clothing Recommender</h5>
             <div class="card-text">
               <div class="get_cloth" onclick="predictClothingType()">
-              <img id="clothingImage" src="/static/none.png" style="width: 250px;" alt="Clothing Image">
-            </div>
+                <img id="clothingImage" src="/static/none.png" style="width: 250px;" alt="Clothing Image">
+              </div>
               <p id="result"></p>
             </div>
           </div>
@@ -87,7 +88,7 @@
           <div class="forecast">
             <!-- Forecast items will be added here dynamically -->
           </div>
-          
+
           <div class="more_info_item">
             <div class="icon">
             </div>
@@ -118,11 +119,21 @@
             </div>
           </div>
         </div>
+        <div class="container">
+          <button class="week-button" onclick="getWeatherForecast()">Week</button>
+          <button class="week-button" onclick="getHourlyWeatherForecast()">Day</button>
+          <div class="main">
+            <div id="weather-container">
+              <div id="weather-icon" class="weather-icon"></div>
+              <div id="forecast" class="cards"></div>
+            </div>
+          </div>
+        </div>        
       </div>
     </div>
-  </div>
-  </div>
 
+
+  </div>
 </body>
 
 
