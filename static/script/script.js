@@ -325,10 +325,87 @@ function handleDarkMode() {
 darkMode.addEventListener("click", handleDarkMode);
 //weekely data 
 
-
+document.getElementById('dayButton').addEventListener('click', getHourlyWeatherForecast);
+document.getElementById('weekButton').addEventListener('click', getyWeatherForecast);
 });
+
+/// active 
+
+
+function createCarouselItem(item, date, isActive) {
+  const iconContainer = document.createElement('div');
+  iconContainer.classList.add('icon-container');
+
+  const weatherIcon = document.createElement('img');
+  const weatherIconCode = item.weather[0].icon;
+  const weatherIconUrl = `https://openweathermap.org/img/w/${weatherIconCode}.png`;
+  weatherIcon.style.width = '100px';
+  weatherIcon.style.height = '100px';
+  weatherIcon.src = weatherIconUrl;
+  weatherIcon.alt = 'Weather Icon';
+
+  iconContainer.appendChild(weatherIcon);
+
+  const temperatureKelvin = item.main.temp;
+  const temperatureCelsius = temperatureKelvin - 273.15;
+  const infoContainer = document.createElement('div');
+  infoContainer.classList.add('info-container');
+  infoContainer.innerHTML = `
+    <strong>${date.getHours()}:00</strong>
+    <p>Temperature: <span class="temperature">${temperatureCelsius.toFixed(2)}</span> &#8451;</p>
+    <p>Weather: <span class="weather-description">${item.weather[0].description}</span></p>`;
+
+  const carouselItem = document.createElement('div');
+  carouselItem.classList.add('carousel-item');
+  if (isActive) {
+    carouselItem.classList.add('active');
+  }
+
+  carouselItem.appendChild(iconContainer);
+  carouselItem.appendChild(infoContainer);
+
+  return carouselItem;
+}
   ///weeekely data 
-  async function getWeatherForecast() {
+
+  function createWeeklyWeatherCard(item, date) {
+   
+    const card = document.createElement('div');
+    card.classList.add('card', 'day', 'card-week');
+  
+    const iconContainer = document.createElement('div');
+    iconContainer.classList.add('icon-container');
+  
+    const weatherIcon = document.createElement('img');
+    const weatherIconCode = item.weather[0].icon;
+    const weatherIconUrl = `https://openweathermap.org/img/w/${weatherIconCode}.png`;
+    weatherIcon.style.width = '100px'; // Adjust the width as needed
+    weatherIcon.style.height = '100px';
+    weatherIcon.src = weatherIconUrl;
+    weatherIcon.alt = 'Weather Icon';
+  
+    iconContainer.appendChild(weatherIcon);
+  
+    const temperatureKelvin = item.main.temp;
+    const temperatureCelsius = temperatureKelvin - 273.15;
+    const infoContainer = document.createElement('div');
+    infoContainer.classList.add('info-container');
+    infoContainer.innerHTML = `
+      <strong>${date.toDateString()}</strong>
+      <p>Temperature: <span class="temperature">${temperatureCelsius.toFixed(2)}</span> &#8451;</p>
+      <p>Weather: <span class="weather-description">${item.weather[0].description}</span></p>`;
+  
+    card.appendChild(iconContainer);
+    card.appendChild(infoContainer);
+  
+    return card;
+  }
+
+ 
+
+  async function getyWeatherForecast() {
+ 
+  
     const city = document.querySelector(".search_input").value;
     const apiKey = 'be5ab507efe19fa17051973e945f0555';
     const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`;
@@ -337,66 +414,45 @@ darkMode.addEventListener("click", handleDarkMode);
       const response = await fetch(apiUrl);
       const data = await response.json();
   
-      const forecastContainer = document.getElementById('forecast');
+      const forecastContainer = document.getElementById('weekly-forecast');
       const weatherIconContainer = document.getElementById('weather-icon');
   
       if (!forecastContainer || !weatherIconContainer) {
         console.error('Containers not found');
         return;
       }
-  
+
       forecastContainer.innerHTML = '';
       weatherIconContainer.innerHTML = '';
   
       // Iterate through the next 4 days
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < data.list.length; i += 8) {
         const item = data.list[i];
         if (!item) continue;
   
         const date = new Date(item.dt * 1000);
   
-        const card = document.createElement('div');
-        card.classList.add('card', 'day', 'card-week');
+        const weeklyCard = createWeeklyWeatherCard(item, date);
   
-        const iconContainer = document.createElement('div');
-        iconContainer.classList.add('icon-container');
-  
-        const weatherIcon = document.createElement('img');
-        const weatherIconCode = item.weather[0].icon;
-        const weatherIconUrl = `https://openweathermap.org/img/w/${weatherIconCode}.png`;
-        weatherIcon.style.width = '100px'; // Adjust the width as needed
-        weatherIcon.style.height = '100px';
-        weatherIcon.src = weatherIconUrl;
-        weatherIcon.alt = 'Weather Icon';
-  
-        iconContainer.appendChild(weatherIcon);
-  
-        const infoContainer = document.createElement('div');
-        infoContainer.classList.add('info-container');
-        infoContainer.innerHTML = `
-          <strong>${date.toDateString()}</strong>
-          <p>Temperature: <span class="temperature">${item.main.temp}</span> &#8451;</p>
-          <p>Weather: <span class="weather-description">${item.weather[0].description}</span></p>`;
-  
-        card.appendChild(iconContainer);
-        card.appendChild(infoContainer);
-  
-        forecastContainer.appendChild(card);
+        forecastContainer.appendChild(weeklyCard);
       }
     } catch (error) {
-      console.error('Error fetching weather data:', error);
+      console.error('Error fetching weekly weather data:', error);
     }
   }
+  
   async function getHourlyWeatherForecast() {
+   
+  
     const city = document.querySelector(".search_input").value;
     const apiKey = 'be5ab507efe19fa17051973e945f0555';
     const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`;
-  
+    activeForecastType = 'day';
     try {
       const response = await fetch(apiUrl);
       const data = await response.json();
   
-      const forecastContainer = document.getElementById('forecast');
+      const forecastContainer = document.querySelector('.carousel-inner');
       const weatherIconContainer = document.getElementById('weather-icon');
   
       if (!forecastContainer || !weatherIconContainer) {
@@ -404,46 +460,30 @@ darkMode.addEventListener("click", handleDarkMode);
         return;
       }
   
+      console.log('Active Forecast Type:', activeForecastType);
+  
+      if (activeForecastType !== 'day') {
+        console.log('Not executing hourly forecast. Active type is:', activeForecastType);
+        return;
+      }
+  
       forecastContainer.innerHTML = '';
       weatherIconContainer.innerHTML = '';
   
-      // Iterate through the next 24 hours
       for (let i = 0; i < 24; i++) {
         const item = data.list[i];
         if (!item) continue;
   
         const date = new Date(item.dt * 1000);
   
-        const card = document.createElement('div');
-        card.classList.add('card', 'hourly');
+        const carouselItem = createCarouselItem(item, date, i === 0);
   
-        const iconContainer = document.createElement('div');
-        iconContainer.classList.add('icon-container');
-  
-        const weatherIcon = document.createElement('img');
-        const weatherIconCode = item.weather[0].icon;
-        const weatherIconUrl = `https://openweathermap.org/img/w/${weatherIconCode}.png`;
-        weatherIcon.style.width = '100px'; // Adjust the width as needed
-        weatherIcon.style.height = '100px';
-        weatherIcon.src = weatherIconUrl;
-        weatherIcon.alt = 'Weather Icon';
-  
-        iconContainer.appendChild(weatherIcon);
-  
-        const infoContainer = document.createElement('div');
-        infoContainer.classList.add('info-container');
-        infoContainer.innerHTML = `
-          <strong>${date.getHours()}:00</strong>
-          <p>Temperature: <span class="temperature">${item.main.temp}</span> &#8451;</p>
-          <p>Weather: <span class="weather-description">${item.weather[0].description}</span></p>`;
-  
-        card.appendChild(iconContainer);
-        card.appendChild(infoContainer);
-  
-        forecastContainer.appendChild(card);
+        forecastContainer.appendChild(carouselItem);
       }
     } catch (error) {
-      console.error('Error fetching weather data:', error);
+      console.error('Error fetching hourly weather data:', error);
     }
   }
   
+
+
