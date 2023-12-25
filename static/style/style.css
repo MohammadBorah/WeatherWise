@@ -6,20 +6,20 @@
   padding: 0;
   box-sizing: border-box;
 }
-
 body {
   position: relative;
   font-family: "Poppins", sans-serif;
   line-height: 1.5em;
-  height: 100%;
+  height: 100% ;
   overflow-x: hidden;
+  margin: 0 !important; /* Remove default margin to ensure full height */
 }
 
 .wrapper {
   position: relative;
   background-image: linear-gradient(skyBlue 70%, dodgerBlue);
   width: 100%;
-  height: 100%;
+  height: 100% !important; /* Set the height of the body to match the wrapper */
 }
 
 .cloud2 {
@@ -366,24 +366,23 @@ h1 {
   margin-top: 3%;
   text-align: left;
 }
-
+.tab-content{
+  width: 100%;
+}
 .container.week-button {
   text-align: left;
 }
 
 .main .cards {
-  display: flex;
-  flex-wrap: wrap;
   gap: 40px;
   justify-content: center;
   /* Center the cards horizontally */
 }
-
 .main {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-
+  flex-direction: row; /* Display the cards in a row */
+  margin-top: 10%;
+  width: 100%;
 }
 
 #weather-icon {
@@ -394,27 +393,32 @@ h1 {
   margin-bottom: 10px;
   /* Add margin as needed */
 }
-
-.card-container{
+.card-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  width: 74%; /* Adjust the width as needed */
+}
+.weekly-forecast{
+  display: flex;
+  flex-direction: row; 
 }
 .card-week {
-  flex: 0 0 calc(33.33% - 20px); /* Adjust the width and margin as needed */
-  /* Other styles remain the same */
+  width: 200px;
+  margin-right: 20px; /* Adjust the margin-right as needed for spacing */
+  margin-bottom: 20px; /* Adjust the margin-bottom as needed */
   color: #f1f1f1;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 300;
   background: rgba(0, 0, 0, 0.623);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(9.2px);
   -webkit-backdrop-filter: blur(9.2px);
   margin-bottom: 20px; /* Adjust the margin as needed */
+
 }
 .carousel-item  {
-  width: 100%;
   color: #f1f1f1;
   font-size: 16px;
   font-weight: 500;
@@ -426,7 +430,12 @@ h1 {
   margin-bottom: 10%;
 }
 
-
+.carousel-inner{
+  text-align: center;
+  color: #f1f1f1;
+  font-size: 16px;
+  font-weight: 500;
+} 
 /* week button style */
 .week-button {
   margin-left: 2em;
@@ -437,13 +446,19 @@ h1 {
   background: #d3d2d2;
   border: 1px solid #e8e8e8;
   transition: all .3s;
-  box-shadow: 6px 6px 12px #c5c5c5,
-    -6px -6px 12px #ffffff;
+  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
 }
 
-.week-button:active {
-  color: #666;
-  box-shadow: inset 4px 4px 12px #c5c5c5,
-    inset -4px -4px 12px #ffffff;
+.week-button.active {
+  background: #d3d2d2!important;
+    color: #090909;
 }
+
 /* slider*/
+.week-button {
+  margin-right: 10px; /* Adjust the margin as needed */
+}
+
+.week-button:last-child {
+  margin-right: 0; /* Remove margin for the last element */
+}

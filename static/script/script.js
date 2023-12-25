@@ -134,6 +134,9 @@ const sun = document.querySelector(".sun");
 const moon = document.querySelector(".moon");
 const stars = document.querySelectorAll(".stars");
 const humidity = document.querySelector(".humidity") ; 
+const humidityTitle = document.querySelector(".humidity_title");
+const weekButton = document.getElementById('v-pills-week-tab');
+const dayButton = document.getElementById('v-pills-day-tab');
 
 //handle dayTime for default dark or light mode
 isDayTime ? (isLightMode = true) : (isLightMode = false);
@@ -199,7 +202,7 @@ function showWeatherInfo(weather) {
       day: "numeric",
     });
   } else {
-    date.innerHTML = new Date().toLocaleDateString("fa", {
+    date.innerHTML = new Date().toLocaleDateString("ar", {
       weekday: "long",
       month: "long",
       day: "numeric",
@@ -272,26 +275,31 @@ lang.addEventListener("click", () => {
     infoText.innerHTML = " المزيد من المعلومات";
     maxTemperatureTitle.innerHTML = "أقصى درجة:";
     minTemperatureTitle.innerHTML = "أدنى درجة:";
-    windDegreeTitle.innerHTML = "درجه:";
+    windDegreeTitle.innerHTML = "درجة:";
     windSpeedTitle.innerHTML = "سرعة:";
+    humidity.innerHTML = "رطوبة:";
+    weekButton.innerHTML = "الأسبوع"; // Update the week button text
+    dayButton.innerHTML = "اليوم"; // Update the day button text
     if (searchInput.value !== "") {
       renderWeatherAsync(searchInput.value);
     }
   } else {
     body.style.fontFamily = "Poppins";
-    city.innerHTML = "Search your location...";
+    city.innerHTML = "ابحث عن مكانك...";
     lang.innerHTML = "EN";
     infoText.innerHTML = "More Info";
     maxTemperatureTitle.innerHTML = "Max:";
     minTemperatureTitle.innerHTML = "Min:";
     windDegreeTitle.innerHTML = "Degree:";
     windSpeedTitle.innerHTML = "Speed:";
+    humidity.innerHTML = "Humidity:";
+    weekButton.innerHTML = "Week"; // Update the week button text
+    dayButton.innerHTML = "Day"; // Update the day button text
     if (searchInput.value !== "") {
       renderWeatherAsync(searchInput.value);
     }
   }
 });
-
 //////////////////////////
 //dark and light mode
 function handleDarkMode() {
@@ -315,6 +323,8 @@ function handleDarkMode() {
       star.style.opacity = 0;
     });
   }
+
+
   weatherCard.classList.toggle("dark_bg");
   weatherCardBody.classList.toggle("dark_bg");
   lang.classList.toggle("dark_txt");
