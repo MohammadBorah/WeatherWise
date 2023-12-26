@@ -42,6 +42,7 @@ function predictClothingType(humidity,temperature,windSpeed) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+ 
 ///////////////////////////
 ////weather data urls
 const BASE_KEY = "be5ab507efe19fa17051973e945f0555";
@@ -137,13 +138,57 @@ const humidity = document.querySelector(".humidity") ;
 const humidityTitle = document.querySelector(".humidity_title");
 const weekButton = document.getElementById('v-pills-week-tab');
 const dayButton = document.getElementById('v-pills-day-tab');
+const locateButton = document.getElementById('locateButton');
+
+document.getElementById('locateButton').addEventListener('click', getLocationAndFetchWeather);
 
 //handle dayTime for default dark or light mode
 isDayTime ? (isLightMode = true) : (isLightMode = false);
 if (!isLightMode) handleDarkMode();
 /////////////////////////
 ///functions
-////////////////////////
+///location and weather 
+function getLocationAndFetchWeather() {
+  const updateSearchBar = (location) => {
+    const searchInput = document.querySelector('.search_input');
+    searchInput.value = location;
+  };
+
+  fetch('https://ipinfo.io/json?token=433f0d3c4f78e8')//api to fetch location
+    .then((response) => response.json())
+    .then((data) => {
+      console.log('ipinfo.io Response:', data);
+
+      // Extract city information from the ipinfo.io response
+      const city = data.city || data.region || data.country;
+      updateSearchBar(city);
+
+      // Log the city for additional debugging
+      console.log('City:', city);
+
+      // Fetch weather data based on the obtained city
+      renderWeatherAsync(city);
+
+      // Update temperature, humidity, and wind speed
+      const temperatureElement = document.querySelector('.temp');
+      const humidityElement = document.querySelector('.humidity');
+      const windSpeedElement = document.querySelector('.wind_speed');
+
+      // Assume these values are available in the 'data' object from the weather API response
+      const temperature = data.temperature || 0;
+      const humidity = data.humidity || 0;
+      const windSpeed = data.windSpeed || 0;
+
+      temperatureElement.innerHTML = `<h1>${temperature}&deg;C</h1>`;
+      humidityElement.innerHTML = `Humidity: ${humidity}%`;
+      windSpeedElement.innerHTML = `Wind Speed: ${windSpeed} M/S`;
+    })
+    .catch((error) => {
+      console.error('Error fetching location:', error);
+    });
+}
+
+
 //get weather data from server and api error handling
 async function renderWeatherAsync(City) {
   try {
@@ -190,6 +235,12 @@ searchInput.addEventListener("keypress", (event) => {
 searchButton.addEventListener("click", () => {
   renderWeatherAsync(searchInput.value);
 });
+
+/// location ip
+
+// Call the function when the page loads
+document.addEventListener('DOMContentLoaded', getLocationAndFetchWeather);
+
 //show weather information
 function showWeatherInfo(weather) {
   cloud1.classList.remove("cloudMove1");
@@ -323,13 +374,17 @@ function handleDarkMode() {
       star.style.opacity = 0;
     });
   }
+ 
 
 
   weatherCard.classList.toggle("dark_bg");
   weatherCardBody.classList.toggle("dark_bg");
   lang.classList.toggle("dark_txt");
+  locateButton.classList.toggle("dark_txt");
   weatherCardBody.classList.toggle("dark_txt");
   infoButton.classList.toggle("dark_txt");
+ 
+
   if (searchInput.value != "") renderWeatherAsync(searchInput.value);
 }
 darkMode.addEventListener("click", handleDarkMode);
@@ -494,6 +549,4 @@ function createCarouselItem(item, date, isActive) {
       console.error('Error fetching hourly weather data:', error);
     }
   }
-  
-
-
+ 
