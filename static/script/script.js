@@ -20,17 +20,17 @@ function predictClothingType(humidity,temperature,windSpeed) {
     const imageElement = document.getElementById('clothingImage');
     switch (data.clothingType) {
       case 'low':
-        imageElement.src = '/static/low.png'; // Correct if using Flask
+        imageElement.src = '/static/low.glb'; 
 
         break;
       case 'moderate':
-        imageElement.src = '/static/mid.png';
+        imageElement.src = '/static/mid.glb';
         break;
       case 'heavy':
-        imageElement.src = '/static/heavy.png';
+        imageElement.src = '/static/heavy.glb';
         break;
       default:
-        // Set a default image if the clothing type is unknown
+      
         imageElement.src = 'path/to/default_image.png';
     }
   })
