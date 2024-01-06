@@ -7,7 +7,6 @@ app = Flask(__name__)
 
 # Load the model
 model = pickle.load(open('model.pkl', 'rb'))
-
 # Load the scaler
 with open('scaler.pkl', 'rb') as scaler_file:
     scaler = pickle.load(scaler_file)
